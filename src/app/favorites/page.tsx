@@ -10,11 +10,21 @@ export default function FavoritesPage() {
   const [favorites, setFavorites] = useState<Recipe[]>([]);
   const [mounted, setMounted] = useState(false);
 
+  // 1. Create a helper function to handle the async data
+  const loadFavorites = async () => {
+    const data = await getFavorites();
+    setFavorites(data);
+  };
+
   useEffect(() => {
     setMounted(true);
-    setFavorites(getFavorites());
     
-    const handleUpdate = () => setFavorites(getFavorites());
+    // 2. Call the helper instead of setting state directly
+    loadFavorites();
+    
+    // 3. Update the event listener to also use the helper
+    const handleUpdate = () => { loadFavorites(); };
+    
     window.addEventListener('favoritesUpdated', handleUpdate);
     return () => window.removeEventListener('favoritesUpdated', handleUpdate);
   }, []);
@@ -30,7 +40,7 @@ export default function FavoritesPage() {
           <h1 className="text-5xl font-black tracking-tighter">
             Your <span className="text-orange-600 italic">Favorites</span>
           </h1>
-          <p className="text-stone-500 mt-2">The recipes you've saved to cook later.</p>
+          <p className="text-stone-500 mt-2">The recipes you've saved to your account.</p>
         </header>
 
         {favorites.length > 0 ? (

@@ -26,8 +26,10 @@ export default function HomePage() {
 
   useEffect(() => {
     setMounted(true);
-    const updateCount = () => {
-      const favs = getFavorites();
+
+    // 1. Make this function async so it can wait for Supabase
+    const updateCount = async () => {
+      const favs = await getFavorites(); // Use await here
       setFavCount(favs.length);
     };
 
